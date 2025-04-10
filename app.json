@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "trackcash",
+    "slug": "trackcash",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
