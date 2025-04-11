@@ -1,8 +1,12 @@
-import React from "react";
-import { Text } from "react-native";
+import { View } from "react-native";
+import FloatingButton from "../shared/FloatingButton";
 
 const HomeScreen = () => {
-  return <Text>Home</Text>;
+  return (
+    <View style={{ flex: 1 }}>
+      <FloatingButton onPress={() => console.log("Pressed FAB on Home")} />
+    </View>
+  );
 };
 
 export default HomeScreen;

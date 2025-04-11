@@ -1,8 +1,8 @@
 import React from "react";
-import { Text } from "react-native";
+import FloatingButton from "../shared/FloatingButton";
 
 const TransactionScreen = () => {
-  return <Text>Transaction</Text>;
+  return <FloatingButton onPress={() => console.log("Pressed FAB on Home")} />;
 };
 
 export default TransactionScreen;

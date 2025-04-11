@@ -21,6 +21,7 @@ const screenOptions = {
   },
   headerStyle: {
     backgroundColor: "#3877BE",
+    height: 60,
   },
   headerTitleAlign: "start",
   headerTitleStyle: {
