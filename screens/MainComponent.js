@@ -1,11 +1,24 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import HomeScreen from "./HomeScreen";
 import TransactionScreen from "./TransactionScreen";
 import ReportsScreen from "./ReportsScreen";
+import { Icon } from "react-native-elements";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
+import logo from "../assets/images/logo.png";
+import Constants from "expo-constants";
 
 const screenOptions = {
   headerTintColor: "#fff",
+  drawerActiveTintColor: "#3877BE",
+  drawerInactiveTintColor: "#888",
+  drawerLabelStyle: {
+    fontSize: 20, // Applies to all drawer items
+  },
   headerStyle: {
     backgroundColor: "#3877BE",
   },
@@ -55,18 +68,97 @@ const ReportNavigator = () => {
   );
 };
 
-const DrawerNavigator = () => {
+const CustomDrawerContent = (props) => (
+  <DrawerContentScrollView {...props}>
+    <View style={styles.drawerHeader}>
+      <Image source={logo} style={styles.drawerImage} />
+    </View>
+    <DrawerItemList {...props} labelStyle={{ fontWeight: "bold" }} />
+  </DrawerContentScrollView>
+);
+
+const MainComponent = () => {
   return (
-    <Drawer.Navigator screenOptions={screenOptions}>
-      <Drawer.Screen name="Home" component={HomeNavigator} />
-      <Drawer.Screen name="Transaction" component={TransactionNavigator} />
-      <Drawer.Screen name="Report" component={ReportNavigator} />
-    </Drawer.Navigator>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: Constants.statusBarHeight,
+      }}
+    >
+      <Drawer.Navigator
+        drawerContent={CustomDrawerContent}
+        screenOptions={screenOptions}
+      >
+        <Drawer.Screen
+          name="Home"
+          component={HomeNavigator}
+          options={{
+            title: "Home",
+            drawerIcon: ({ color }) => (
+              <Icon
+                name="home"
+                type="font-awesome"
+                size={24}
+                iconStyle={{ width: 24 }}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Transaction"
+          component={TransactionNavigator}
+          options={{
+            title: "Transaction",
+            drawerIcon: ({ color }) => (
+              <Icon
+                name="list-alt"
+                type="font-awesome"
+                size={24}
+                iconStyle={{ width: 24 }}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="Report"
+          component={ReportNavigator}
+          options={{
+            title: "Report",
+            drawerIcon: ({ color }) => (
+              <Icon
+                name="pie-chart"
+                type="font-awesome"
+                size={24}
+                iconStyle={{ width: 24 }}
+                color={color}
+              />
+            ),
+          }}
+        />
+      </Drawer.Navigator>
+    </View>
   );
 };
 
-const MainComponent = () => {
-  return <DrawerNavigator />;
-};
-
 export default MainComponent;
+
+const styles = StyleSheet.create({
+  drawerHeader: {
+    backgroundColor: "#3877BE",
+    height: 140,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  drawerHeaderText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  drawerImage: {
+    margin: 10,
+    height: 60,
+    width: 150,
+  },
+});
