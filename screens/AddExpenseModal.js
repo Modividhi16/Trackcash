@@ -10,12 +10,14 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
-import { Icon } from "react-native-elements";
 import { StatusBar } from "expo-status-bar";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
+import { useDispatch } from "react-redux";
+import { addExpense } from "../features/expensesSlice";
 
 const categories = [
   { label: "Food", value: "Food" },
@@ -28,9 +30,11 @@ const categories = [
 const AddExpenseModal = ({ visible, onClose }) => {
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState("");
   const [isFocus, setIsFocus] = useState(false);
   const [amount, setAmount] = useState(0);
+  const [note, setNote] = useState("");
+  const dispatch = useDispatch();
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -45,10 +49,34 @@ const AddExpenseModal = ({ visible, onClose }) => {
     return `${month}/${day}/${year}`;
   };
 
-  const handleInput = () => {
-    console.log(amount);
-    console.log(date);
-    console.log(category);
+  const handleSubmit = () => {
+    if (!amount || amount <= 0 || !category) {
+      alert("Please fill out all fields.");
+      return;
+    }
+    const newExpense = {
+      category,
+      amount: parseFloat(amount),
+      date,
+      note,
+    };
+
+    dispatch(addExpense(newExpense)); // Dispatch action to add expense
+    resetModal();
+    Alert.alert("Success!", "Expense has been added.");
+    onClose();
+  };
+
+  const handleCancel = () => {
+    resetModal();
+    onClose();
+  };
+
+  const resetModal = () => {
+    setAmount(0);
+    setDate(new Date());
+    setCategory("");
+    setNote("");
   };
 
   return (
@@ -128,13 +156,15 @@ const AddExpenseModal = ({ visible, onClose }) => {
                   placeholderTextColor="#000"
                   multiline
                   numberOfLines={4}
+                  value={note}
+                  onChangeText={setNote}
                 />
               </View>
               <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={handleInput}>
+                <TouchableOpacity onPress={handleSubmit}>
                   <Text style={styles.button}>Add</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={onClose}>
+                <TouchableOpacity onPress={handleCancel}>
                   <Text style={styles.button}>Cancel</Text>
                 </TouchableOpacity>
               </View>

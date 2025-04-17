@@ -1,8 +1,59 @@
 import React from "react";
 import FloatingButton from "../shared/FloatingButton";
+import AddExpenseModal from "./AddExpenseModal";
+import { useState } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 const TransactionScreen = () => {
-  return <FloatingButton onPress={() => console.log("Pressed FAB on Home")} />;
+  const expenses = useSelector((state) => state.expenses.expenses);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <View style={styles.transItems}>
+        <Text style={{ fontSize: 20 }}>{item.category}</Text>
+        <Text style={{ fontSize: 20 }}>${item.amount.toFixed(2)}</Text>
+      </View>
+      <Text>{new Date(item.date).toLocaleDateString()}</Text>
+      {/* <Text>{item.note}</Text> */}
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={expenses}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={renderItem}
+        ListEmptyComponent={<Text>No expenses yet</Text>}
+      />
+      <FloatingButton onPress={() => setModalVisible(true)} />
+      <AddExpenseModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  item: {
+    backgroundColor: "#f2f2f2",
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 10,
+  },
+  transItems: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+});
 
 export default TransactionScreen;
