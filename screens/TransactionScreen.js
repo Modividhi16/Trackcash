@@ -9,6 +9,10 @@ const TransactionScreen = () => {
   const expenses = useSelector((state) => state.expenses.expenses);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const sortedExpenses = [...expenses].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <View style={styles.transItems}>
@@ -22,7 +26,7 @@ const TransactionScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={expenses}
+        data={sortedExpenses}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         ListEmptyComponent={
