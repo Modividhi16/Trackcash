@@ -25,6 +25,8 @@ const categories = [
   { label: "Transport", value: "Transport" },
   { label: "Rent", value: "Rent" },
   { label: "Internet", value: "Internet" },
+  { label: "HealthCare", value: "HealthCare" },
+  { label: "Membership", value: "Membership" },
 ];
 
 const AddExpenseModal = ({ visible, onClose }) => {

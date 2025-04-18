@@ -16,7 +16,6 @@ const TransactionScreen = () => {
         <Text style={{ fontSize: 20 }}>${item.amount.toFixed(2)}</Text>
       </View>
       <Text>{new Date(item.date).toLocaleDateString()}</Text>
-      {/* <Text>{item.note}</Text> */}
     </View>
   );
 
@@ -26,7 +25,9 @@ const TransactionScreen = () => {
         data={expenses}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
-        ListEmptyComponent={<Text>No expenses yet</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No expenses yet</Text>
+        }
       />
       <FloatingButton onPress={() => setModalVisible(true)} />
       <AddExpenseModal
@@ -53,6 +54,12 @@ const styles = StyleSheet.create({
   transItems: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  emptyText: {
+    fontSize: 20,
+    textAlign: "center",
+    marginTop: 50,
+    color: "#999",
   },
 });
 
