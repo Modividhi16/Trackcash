@@ -8,9 +8,19 @@ import HomeScreen from "./HomeScreen";
 import TransactionScreen from "./TransactionScreen";
 import ReportsScreen from "./ReportsScreen";
 import { Icon } from "react-native-elements";
-import { Image, Platform, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import logo from "../assets/images/logo.png";
 import Constants from "expo-constants";
+import { useState, useLayoutEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const screenOptions = {
   headerTintColor: "#fff",
@@ -45,14 +55,49 @@ const HomeNavigator = () => {
   );
 };
 
-const TransactionNavigator = () => {
+const TransactionNavigator = ({ navigation }) => {
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () =>
+        isSearching ? (
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search"
+            placeholderTextColor="black"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            autoFocus
+          />
+        ) : (
+          <Text style={styles.headerTitle}>Transactions</Text>
+        ),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => setIsSearching((prev) => !prev)}
+          style={{ marginRight: 15 }}
+        >
+          <Ionicons
+            name={isSearching ? "close" : "search"}
+            size={24}
+            color="white"
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, isSearching, searchQuery]);
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Transaction"
-        component={TransactionScreen}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Transaction" options={{ headerShown: false }}>
+        {() => (
+          <TransactionScreen
+            searchQuery={searchQuery}
+            isSearching={isSearching}
+          />
+        )}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -161,5 +206,18 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 60,
     width: 150,
+  },
+  searchInput: {
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    width: 250,
+    height: 40,
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontWeight: "bold",
+    fontSize: 24,
+    color: "#fff",
   },
 });

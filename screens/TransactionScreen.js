@@ -1,17 +1,25 @@
-import React from "react";
 import FloatingButton from "../shared/FloatingButton";
 import AddExpenseModal from "./AddExpenseModal";
 import { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 
-const TransactionScreen = () => {
+const TransactionScreen = ({ searchQuery, isSearching }) => {
   const expenses = useSelector((state) => state.expenses.expenses);
   const [modalVisible, setModalVisible] = useState(false);
 
   const sortedExpenses = [...expenses].sort(
     (a, b) => new Date(b.date) - new Date(a.date)
   );
+
+  const filteredExpenses = sortedExpenses.filter(
+    (expense) =>
+      expense.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      expense.amount.toString().includes(searchQuery)
+  );
+
+  const dataToShow =
+    isSearching && searchQuery.length > 0 ? filteredExpenses : sortedExpenses;
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -26,7 +34,7 @@ const TransactionScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={sortedExpenses}
+        data={dataToShow}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
         ListEmptyComponent={
